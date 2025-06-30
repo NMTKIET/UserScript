@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Script Manager</title>
+  <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+  <style>
+    /* Custom styles for the popup */
+    body {
+      width: 800px; /* Tăng chiều rộng để phù hợp với editor */
+      height: 600px; /* Tăng chiều cao */
+      padding: 10px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+    .header-bar h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    .menu-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    .menu-bar button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+    .menu-bar button:hover {
+        background-color: #0056b3;
+    }
+
+    #script-select-container {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    #script-select-container label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    #scriptSelect {
+        flex-grow: 1;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    /* Style for CodeMirror editor */
+    .CodeMirror {
+      border: 1px solid #eee;
+      height: auto; /* Cho phép chiều cao tự điều chỉnh */
+      flex-grow: 1; /* Cho phép editor mở rộng để lấp đầy không gian còn lại */
+      min-height: 400px; /* Chiều cao tối thiểu cho editor */
+    }
+    .CodeMirror-vscrollbar, .CodeMirror-hscrollbar {
+        z-index: 1000; /* Đảm bảo thanh cuộn hiển thị trên các phần khác */
+    }
+
+    .status-bar {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+        text-align: right;
+        font-size: 0.85em;
+        color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h2>User Script Editor</h2>
+    <div class="top-buttons">
+      <button id="addScriptBtn">Thêm Script Mới</button>
+      <button id="saveScriptBtn" style="background-color: #28a745;">Lưu Script</button>
+      <button id="deleteScriptBtn" style="background-color: #dc3545;">Xóa Script</button>
+      <button id="settingsBtn" style="background-color: #6c757d;">Cài đặt</button>
+      <button id="helpBtn" style="background-color: #17a2b8;">Trợ giúp</button>
+    </div>
+  </div>
+
+  <div class="menu-bar">
+    <button id="fileMenu">File</button>
+    <button id="editMenu">Edit</button>
+    <button id="selectionMenu">Selection</button>
+    <button id="findMenu">Find</button>
+    <button id="gotoMenu">GoTo</button>
+    <button id="developerMenu">Developer</button>
+  </div>
+
+  <div id="script-select-container">
+    <label for="scriptSelect">Chọn Script:</label>
+    <select id="scriptSelect">
+      </select>
+  </div>
+
+  <textarea id="codeEditor"></textarea>
+
+  <div class="status-bar">
+    Đang chỉnh sửa: <span id="currentScriptName">Chưa chọn script</span>
+  </div>
+
+  <script src="lib/codemirror/lib/codemirror.js"></script>
+  <script src="lib/codemirror/mode/javascript/javascript.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
