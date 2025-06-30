@@ -1,11 +1,236 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>User Script Manager</title>
+  <meta charset="UTF-8"> <title>User Script Manager</title>
   <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
   <style>
-    /* ... (Giữ nguyên toàn bộ CSS của bạn) ... */
+    body {
+      width: 800px; /* Kích thước trang quản lý */
+      height: 600px;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    /* Top navigation tabs */
+    .tab-nav {
+      display: flex;
+      background-color: #333;
+      padding: 5px 10px;
+      justify-content: flex-end; /* Align tabs to the right */
+    }
+    .tab-nav button {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-left: 5px; /* Space between buttons */
+      border-radius: 4px;
+    }
+    .tab-nav button:hover {
+      background-color: #777;
+    }
+    .tab-nav button.active {
+      background-color: #007bff; /* Active tab color */
+    }
+
+    /* Main content area */
+    .tab-content {
+      flex-grow: 1; /* Allow content to fill remaining space */
+      padding: 10px; /* Add padding here instead of body */
+      overflow-y: auto; /* Enable scrolling for content if it overflows */
+    }
+    .tab-pane {
+      display: none; /* Hidden by default */
+      height: 100%; /* Take full height of tab-content */
+      display: flex;
+      flex-direction: column;
+    }
+    .tab-pane.active {
+      display: flex; /* Show active pane */
+    }
+
+    /* Editor View Specific Styles */
+    #editor-view .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 10px;
+    }
+    #editor-view .header-bar h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    #editor-view .top-buttons button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin-left: 5px;
+    }
+    #editor-view .top-buttons button:hover {
+        background-color: #0056b3;
+    }
+    #editor-view .top-buttons button#addScriptBtn { background-color: #28a745; }
+    #editor-view .top-buttons button#addScriptBtn:hover { background-color: #218838; }
+    #editor-view .top-buttons button#saveScriptBtn { background-color: #28a745; }
+    #editor-view .top-buttons button#saveScriptBtn:hover { background-color: #218838; }
+    #editor-view .top-buttons button#deleteScriptBtn { background-color: #dc3545; }
+    #editor-view .top-buttons button#deleteScriptBtn:hover { background-color: #c82333; }
+    #editor-view .top-buttons button#settingsBtnEditor { background-color: #6c757d; }
+    #editor-view .top-buttons button#settingsBtnEditor:hover { background-color: #5a6268; }
+    #editor-view .top-buttons button#helpBtnEditor { background-color: #17a2b8; }
+    #editor-view .top-buttons button#helpBtnEditor:hover { background-color: #138496; }
+
+
+    #editor-view .menu-bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    #editor-view .menu-bar button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+    #editor-view .menu-bar button:hover {
+        background-color: #0056b3;
+    }
+
+    #editor-view #script-select-container {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    #editor-view #script-select-container label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    #editor-view #scriptSelect {
+        flex-grow: 1;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        height: 30px;
+        background-color: #fff;
+        cursor: pointer;
+    }
+
+    /* Style for CodeMirror editor */
+    #editor-view .CodeMirror {
+      border: 1px solid #eee;
+      height: auto;
+      flex-grow: 1;
+      min-height: 300px; /* Adjust height for the new layout */
+      background-color: #fff;
+    }
+    #editor-view .CodeMirror-vscrollbar, #editor-view .CodeMirror-hscrollbar {
+        z-index: 1000;
+    }
+
+    #editor-view .status-bar {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+        text-align: right;
+        font-size: 0.85em;
+        color: #666;
+    }
+
+
+    /* Installed Userscripts View Specific Styles (Table) */
+    #list-view h2 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    #userscripts-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #userscripts-table th, #userscripts-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 0.9em;
+    }
+    #userscripts-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      color: #333;
+    }
+    #userscripts-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    #userscripts-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    #userscripts-table .script-action-buttons {
+      display: flex;
+      gap: 5px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    #userscripts-table .script-action-buttons button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8em;
+    }
+    #userscripts-table .script-action-buttons button:hover {
+      opacity: 0.9;
+    }
+    #userscripts-table .script-action-buttons .edit-btn { background-color: #ffc107; color: #333; }
+    #userscripts-table .script-action-buttons .edit-btn:hover { background-color: #e0a800; }
+    #userscripts-table .script-action-buttons .delete-btn { background-color: #dc3545; }
+    #userscripts-table .script-action-buttons .delete-btn:hover { background-color: #c82333; }
+
+    #userscripts-table input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 5px;
+    }
+
+    .icon-placeholder {
+      width: 16px;
+      height: 16px;
+      background-color: #ccc; /* Placeholder for actual icon */
+      border-radius: 3px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .action-icon {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .action-icon.edit { background-color: #007bff; }
+    .action-icon.delete { background-color: #dc3545; }
+
+
   </style>
 </head>
 <body>
@@ -75,5 +300,6 @@
 
   <script src="lib/codemirror/lib/codemirror.js"></script>
   <script src="lib/codemirror/mode/javascript/javascript.js"></script>
-  <script src="options.js"></script> </body>
+  <script src="options.js"></script>
+</body>
 </html>
