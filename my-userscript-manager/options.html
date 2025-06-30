@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>User Script Manager</title>
+  <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+  <style>
+    /* ... (Giữ nguyên toàn bộ CSS của bạn) ... */
+  </style>
+</head>
+<body>
+  <div class="tab-nav">
+    <button id="installedUserscriptsTab" class="active">Installed Userscripts</button>
+    <button id="editorTab">Editor</button>
+    <button id="settingsTab">Settings</button>
+    <button id="utilitiesTab">Utilities</button>
+  </div>
+
+  <div class="tab-content">
+    <div id="list-view" class="tab-pane active">
+      <h2>Installed Userscripts</h2>
+      <table id="userscripts-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th><input type="checkbox" id="selectAllEnabled" title="Bật/Tắt tất cả"> Enabled</th>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Size</th>
+            <th>Sites</th>
+            <th>Homepage</th>
+            <th>Last updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          </tbody>
+      </table>
+    </div>
+
+    <div id="editor-view" class="tab-pane">
+      <div class="header-bar">
+        <h2>User Script Editor</h2>
+        <div class="top-buttons">
+          <button id="addScriptBtn">Thêm Script Mới</button>
+          <button id="saveScriptBtn">Lưu Script</button>
+          <button id="deleteScriptBtn">Xóa Script</button>
+          <button id="settingsBtnEditor">Cài đặt</button>
+          <button id="helpBtnEditor">Trợ giúp</button>
+        </div>
+      </div>
+
+      <div class="menu-bar">
+        <button id="fileMenu">File</button>
+        <button id="editMenu">Edit</button>
+        <button id="selectionMenu">Selection</button>
+        <button id="findMenu">Find</button>
+        <button id="gotoMenu">GoTo</button>
+        <button id="developerMenu">Developer</button>
+      </div>
+
+      <div id="script-select-container">
+        <label for="scriptSelect">Chọn Script:</label>
+        <select id="scriptSelect">
+          </select>
+      </div>
+
+      <textarea id="codeEditor"></textarea>
+
+      <div class="status-bar">
+        Đang chỉnh sửa: <span id="currentScriptName">Chưa chọn script</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/codemirror/lib/codemirror.js"></script>
+  <script src="lib/codemirror/mode/javascript/javascript.js"></script>
+  <script src="options.js"></script> </body>
+</html>
